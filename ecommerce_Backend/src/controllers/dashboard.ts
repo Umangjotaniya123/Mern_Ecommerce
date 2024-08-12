@@ -1,4 +1,3 @@
-import { disconnect } from "process";
 import { myCache } from "../app.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Order } from "../models/order.js";
@@ -193,7 +192,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
                 revenue: orderMonthlyRevenue,
             },
             userRatio,
-            modifiedLatestTransaction,
+            latestTransactions: modifiedLatestTransaction,
         };
 
         myCache.set(key, JSON.stringify(stats));
