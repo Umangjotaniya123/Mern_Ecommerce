@@ -42,7 +42,7 @@ const NewProduct = ({ user }: PropsType) => {
   const submitHandler = async (e : FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(!name || !price || !stock || !category || !photo) return ;
+    if(!name || !price || stock < 0 || !category || !photo) return ;
 
     const formData = new FormData();
 
