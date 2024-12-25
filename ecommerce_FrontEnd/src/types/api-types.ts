@@ -1,4 +1,4 @@
-import { Bar, CartItem, Line, Order, Pie, Product, ShippingInfo, Stats, User } from "./types";
+import { Address, Bar, CartItem, Line, Order, Pie, Product, ShippingInfo, Stats, User } from "./types";
 
 export type CustomError = {
   status: number;
@@ -112,6 +112,13 @@ export type NewOrderRequest = {
 export type DeleteUserRequest = {
   userId: string;
   adminUserId: string;
+}
+
+export type UpdateUserRequest = {
+  // user: User;
+  userId: string;
+  formData: FormData;
+  // photo: File;
 }
 
 export type UpdateOrderRequest = {

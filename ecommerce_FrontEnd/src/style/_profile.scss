@@ -1,0 +1,76 @@
+.profile {
+    // height: 90vh;
+    @include flex(column);
+
+    >main {
+        width: 70%;
+        height: 100%;
+        // max-width: 80%;
+        // padding: 2rem;
+        @include baseShadow;
+        @include flex(column, center, stretch);
+
+        .box {
+            @include flex(row, stretch, stretch, 0);
+            margin: 0px 50px 0 0px;
+
+            .box_left {
+                width: 50%;
+                margin-bottom: 20px;
+                @include flex(column, center, center);
+
+                >img {
+                    width: 50%;
+                    max-height: 80%;
+                    border-radius: 30px;
+                }
+
+                >p {
+                    font-size: 1.8rem;
+                }
+
+            }
+
+            .box_right {
+                width: 65%;
+                padding: 0px 15px 20px 15px;;
+                @include flex(column, center, flex-start, 0rem);
+
+                >div {
+                    @include flex(row, flex-start, center, 0rem);
+                    margin: 12px 0px;
+                    width: 100%;
+                    border-bottom: 1px solid gray;
+                    
+                    >h5 {
+                        font-size: 1rem;
+                        width: 130px;
+                    }
+                }
+            }
+        }
+
+
+    }
+    button {
+        width: 20%;
+        margin: 0 auto 8px auto;
+        height: 3rem;
+        @include btn(unset, rgb(62, 125, 242), white);
+        @include flex;
+        border: 1px solid rgb(62, 125, 242);
+        border-radius: 5px;
+        font-size: 1.05rem;
+
+        >svg {
+            background-color: white;
+            width: 30%;
+            height: 100%;
+        }
+
+        >span {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}

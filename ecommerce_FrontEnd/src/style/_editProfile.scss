@@ -1,0 +1,224 @@
+.editProfile {
+    @include flex(column);
+
+    .back-btn {
+        @include square(2.5rem);
+        background-color: $color2;
+        color: $color1;
+        @include flex;
+        position: fixed;
+        top: 2rem;
+        left: 2rem;
+        border-radius: 100%;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        @include baseShadow;
+
+        svg {
+            transition: all 0.3s;
+        }
+
+        &:hover svg {
+            translate: -0.25rem;
+        }
+    }
+
+    >form {
+        width: 100%;
+        height: 80%;
+        max-width: 80%;
+        // padding: 2rem;
+        @include baseShadow;
+        @include flex(column, center, stretch);
+
+        .box {
+            @include flex(row, stretch, stretch, 0);
+            margin: 0px 50px 15px 50px;
+            flex-wrap: wrap;
+            // margin-left: 0px; 
+
+            >div {
+                width: 30%;
+                margin: 10px;
+                // @include flex(column, center, stretch);
+
+            }
+
+            small {
+                color: red;
+                /* Error messages in red to signify an issue */
+                font-size: 12px;
+                /* Smaller font size to differentiate from regular text */
+                margin-top: 4px;
+                /* Adds spacing from the input field */
+                display: block;
+                /* Ensures it appears on a new line */
+                background: rgba(255, 0, 0, 0.1);
+                /* Light red background */
+                padding: 2px 4px;
+                /* Padding for better readability */
+                border-radius: 4px;
+                /* Rounded corners for the box */
+                font-weight: bold;
+                /* Bold text for emphasis */
+            }
+        }
+
+        .add {
+            @include flex(row, flex-start, center, 1rem);
+            margin-left: 50px;
+            right: 10px;
+
+            >p {
+                @include flex;
+                @include square(2rem);
+                border-radius: 100%;
+                border: none;
+                background-color: #3d3737;
+                cursor: pointer;
+                color: $color1;
+                font-size: 1rem;
+                @include baseShadow;
+            }
+        }
+
+        .show {
+            @include flex(row, flex-start, center, 1rem);
+            margin-left: 50px;
+            right: 10px;
+            font-size: 1.05rem;
+
+            .delete {
+                // position: absolute;
+                // transform: translateY(-50%);
+                display: none;
+                cursor: pointer;
+                opacity: 0;
+                /* Hidden by default */
+                transition: opacity 0.3s ease;
+                /* Smooth fade-in and fade-out */
+            }
+
+            >p {
+                margin-left: 0;
+            }
+
+            .plus {
+                // margin: 0 auto 8px auto;
+                // @include btn(unset,rgb(66, 63, 63), white);
+                // @include flex();
+                // border: 1px solid black;
+                // border-radius: 5px;
+                @include flex;
+                @include square(1rem);
+                border-radius: 100%;
+                border: none;
+                // background-color: #3d3737;
+                cursor: pointer;
+                // color: $color1;
+                font-size: 1rem;
+                // @include baseShadow;
+            }
+
+            .input {
+                width: 30%;
+
+                >input,
+                >select {
+                    @include inputStyle;
+                    padding: 10px;
+                    border: 1px solid rgba(162, 162, 162, 0.53);
+                    border-radius: 5px;
+                    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                }
+            }
+        }
+
+        .show:hover .delete {
+            display: flex;
+            opacity: 1;
+            /* Show on hover */
+        }
+
+        .input {
+            width: 100%;
+            font-size: 1rem;
+            @include flex(column, flex-start, stretch, 0.2rem);
+
+            >div {
+                @include flex(row, flex-start, center, 0.6rem);
+                border: 1px solid rgba(162, 162, 162, 0.53);
+                border-radius: 5px;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+                >img {
+                    width: 45px;
+                    max-height: 60px;
+                    border-radius: 5px;
+                    margin: 5px;
+                }
+            }
+
+            overflow: hidden;
+
+            >input,
+            >select {
+                @include inputStyle;
+                padding: 10px;
+                border: 1px solid rgba(162, 162, 162, 0.53);
+                border-radius: 5px;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+        }
+
+    }
+
+    .buttons {
+        @include flex(row, flex-end, center, 1rem);
+        margin: 20px;
+
+        .cancel {
+            width: 20%;
+            height: 3rem;
+            @include btn(unset, rgb(115, 118, 124), white);
+            @include flex;
+            border: 1px solid rgb(81, 82, 83);
+            border-radius: 50px;
+            font-size: 1rem;
+
+            >svg {
+                background-color: white;
+                width: 30%;
+                height: 100%;
+            }
+
+            >span {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    }
+
+    .btn {
+        width: 20%;
+        height: 3rem;
+        @include btn(unset, rgb(62, 125, 242), white);
+        @include flex;
+        border: 1px solid rgb(62, 125, 242);
+        border-radius: 50px;
+        font-size: 1rem;
+
+        >svg {
+            background-color: white;
+            width: 30%;
+            height: 100%;
+        }
+
+        >span {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}

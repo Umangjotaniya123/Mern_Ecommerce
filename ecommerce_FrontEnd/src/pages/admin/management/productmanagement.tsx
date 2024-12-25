@@ -63,6 +63,7 @@ const Productmanagement = ({ user }: PropsType) => {
     if (stockUpdate !== undefined)
       formData.set("stock", stockUpdate.toString());
     if (categoryUpdate) formData.set("category", categoryUpdate);
+    if(photoFile) formData.set("photo", photoFile);
 
     const res = await updateProduct({
       formData,

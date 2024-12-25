@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 import validator from "validator";
 
+interface Address{
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    pincode: number | undefined;
+    addType: string;
+}
 // Typescript Model
 interface IUser extends Document {
     _id: string;
@@ -10,6 +18,7 @@ interface IUser extends Document {
     role: "admin" | "user";
     gender: "male" | "female";
     dob: Date;
+    addressInfo: Address[];
     createdAt: Date;
     updatedAt: Date;
     // Virtual Attribute...
@@ -49,6 +58,14 @@ const schema = new mongoose.Schema({
         type: Date,
         required: [true, "Please enter Date of birth"],
     },
+    addressInfo: [{
+        address: String,
+        city: String,
+        state: String,
+        country: String,
+        pincode: Number,
+        addType : String,
+    }],
 }, {
     timestamps: true,
 });
@@ -56,6 +73,7 @@ const schema = new mongoose.Schema({
 schema.virtual("age").get(function() {
     const today = new Date();
     const dob = this.dob;
+    // console.log(dob);
     let age = today.getFullYear() - dob.getFullYear();
 
     if(today.getMonth() < dob.getMonth() || 

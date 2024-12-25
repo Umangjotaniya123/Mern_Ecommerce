@@ -9,6 +9,7 @@ import { CustomError } from "../../types/api-types";
 import toast from "react-hot-toast";
 import { Skeleton } from "../../components/Loader";
 import { responseToast } from "../../utils/features";
+import { server } from "../../redux/store";
 
 interface DataType {
   avatar: ReactElement;
@@ -75,7 +76,7 @@ const Customers = ({ user }: PropsType) => {
           avatar: (
             <img 
               style={{borderRadius: "50%"}}
-              src={i.photo} 
+              src={`${server}/${i.photo}`} 
               alt={i.name}
             />
           ),

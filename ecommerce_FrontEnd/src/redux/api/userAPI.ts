@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AllUsersResponse, DeleteUserRequest, MessageResponse, UserResponse } from "../../types/api-types";
+import { AllUsersResponse, DeleteUserRequest, MessageResponse, UpdateUserRequest, UserResponse } from "../../types/api-types";
 import { User } from "../../types/types";
 import axios from "axios";
 
@@ -29,7 +29,15 @@ export const userAPI = createApi({
 
         allUsers: builder.query<AllUsersResponse, string>({
             query: (id) => `all?id=${id}`,
-            providesTags: ["users",]
+            providesTags: ["users"]
+        }),
+
+        updateUser: builder.mutation<MessageResponse, UpdateUserRequest>({
+            query: ({ userId, formData }) => ({
+                url: `${userId}`,
+                method: "PUT",
+                body: formData,
+            })
         })
     }),
 });
@@ -45,4 +53,4 @@ export const getUser = async (id: string) => {
     }
 }
 
-export const { useLoginMutation, useDeleteUserMutation, useAllUsersQuery } = userAPI;
+export const { useLoginMutation, useDeleteUserMutation, useAllUsersQuery, useUpdateUserMutation } = userAPI;

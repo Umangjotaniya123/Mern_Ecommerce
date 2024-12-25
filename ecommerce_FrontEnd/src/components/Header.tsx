@@ -45,6 +45,7 @@ const Header = ({ user }: PropsType) => {
                                     <Link onClick={() => setIsOpen(false)} to='/admin/dashboard'>Admin</Link>
                                 )}
                                 <Link onClick={() => setIsOpen(false)} to="/orders">Orders</Link>
+                                <Link onClick={() => setIsOpen(false)} to='/profile'>Profile</Link>
                                 <button onClick={logoutHandler}><FaSignOutAlt /></button>
                             </div>
                         </dialog>

@@ -1,3 +1,4 @@
+import { Address } from "cluster";
 import { NextFunction, Request, Response } from "express";
 
 export interface NewUserRequestBody {
@@ -7,6 +8,16 @@ export interface NewUserRequestBody {
     gender: string;
     _id: string;
     dob: Date;
+}
+
+export interface UserType {
+    name: string;
+    email: string;
+    photo: string;
+    gender: string;
+    _id: string;
+    dob: string;
+    addressInfo: Address[];
 }
 
 export interface NewProductRequestBody {

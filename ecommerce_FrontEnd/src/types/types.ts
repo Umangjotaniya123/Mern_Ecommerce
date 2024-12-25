@@ -4,8 +4,18 @@ export type User = {
     photo: string;
     gender: string;
     role: string;
+    addressInfo: Address[];
     dob: string;
     _id: string;
+}
+
+export type Address = {
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    pincode: number | undefined;
+    addType: string;
 }
 
 export type Product = {
@@ -22,7 +32,7 @@ export type ShippingInfo = {
     city: string;
     state: string;
     country: string;
-    pinCode: string;
+    pinCode: number;
 }
 
 export type CartItem = {

@@ -7,8 +7,14 @@ import axios from "axios";
 import { server } from "../redux/store";
 import toast from "react-hot-toast";
 import { saveShippingInfo } from "../redux/reducer/cartReducer";
+import { Address } from "../types/types";
 
-const Shipping = () => {
+interface PropsType {
+    addressInfo: Address;
+    userId: string;
+};
+
+const Shipping = ({ addressInfo, userId }: PropsType) => {
 
     const { cartItems, total } = useSelector(
         (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
@@ -18,11 +24,11 @@ const Shipping = () => {
     const dispatch = useDispatch();
 
     const [shippingInfo, setShippingInfo] = useState({
-        address: "",
-        city: "",
-        state: "",
-        country: "",
-        pinCode: "",
+        address: addressInfo.address || '',
+        city: addressInfo.city || "",
+        state: addressInfo.state || "",
+        country: addressInfo.country || "",
+        pinCode: addressInfo.pincode,
     });
 
     const changehandler = (
@@ -40,9 +46,11 @@ const Shipping = () => {
             const { data } = await axios.post(
                 `${server}/api/v1/payment/create`,
                 { amount: total },
-                { headers: {
-                    "Content-Type": "application/json",
-                }}
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                }
             );
 
             navigate("/pay", {
@@ -55,7 +63,7 @@ const Shipping = () => {
     };
 
     useEffect(() => {
-        if(cartItems.length <= 0) return navigate("/cart");
+        if (cartItems.length <= 0) return navigate("/cart");
     }, [cartItems]);
 
     return (
@@ -63,7 +71,7 @@ const Shipping = () => {
             <button className="back-btn" onClick={() => navigate("/cart")}><BiArrowBack /></button>
             <form onSubmit={submitHandler}>
                 <h1>Shipping Address</h1>
-                <input
+                {/* <input
                     required
                     type="text"
                     placeholder="Address"
@@ -94,7 +102,7 @@ const Shipping = () => {
                     onChange={changehandler}
                 >
                     <option value="">Choose Country</option>
-                    <option value="india">India</option>
+                    <option value="India">India</option>
                 </select>
                 <input
                     required
@@ -103,7 +111,49 @@ const Shipping = () => {
                     name="pinCode"
                     value={shippingInfo.pinCode}
                     onChange={changehandler}
-                />
+                /> */}
+                <div className="input">
+                    <label htmlFor="">Address</label>
+                    <input type="text"
+                        placeholder="Address"
+                        value={shippingInfo.address}
+                        onChange={changehandler}
+                    />
+                </div>
+                <div className="input">
+                    <label htmlFor="">City</label>
+                    <input type="text"
+                        placeholder="City"
+                        value={shippingInfo.city}
+                        onChange={changehandler}
+                    />
+                </div>
+                <div className="input">
+                    <label htmlFor="">State</label>
+                    <input type="text"
+                        placeholder="State"
+                        value={shippingInfo.state}
+                        onChange={changehandler}
+                    />
+                </div>
+                <div className="input">
+                    <label htmlFor="">Country</label>
+                    <select
+                        value={shippingInfo.country}
+                        onChange={changehandler}
+                    >
+                        <option value="">Choose Country</option>
+                        <option value="India">India</option>
+                    </select>
+                </div>
+                <div className="input">
+                    <label htmlFor="">Pin code</label>
+                    <input type="number"
+                        placeholder="Pin code"
+                        value={shippingInfo.pinCode}
+                        onChange={changehandler}
+                    />
+                </div>
                 <button type="submit">Pay Now</button>
             </form>
         </div>

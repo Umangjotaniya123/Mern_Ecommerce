@@ -22,6 +22,8 @@ const Orders = lazy(() => import("./pages/Orders"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Checkout = lazy(() => import("./pages/Checkout"));
+const P1 = lazy(() => import("./pages/P1"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 
 // Using React admin Dashboared
@@ -85,9 +87,11 @@ const App = () => {
 
           {/* Logged User Routes */}
           <Route element={<ProtectedRoute isAuthenticated={user ? true : false} />}>
-            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/shipping" element={<Shipping addressInfo={user?.addressInfo!} userId={user?._id!} />} />
             <Route path="/orders" element={<Orders user={user} />} />
-            <Route path="/pay" element={<Checkout user={user} />} />
+            <Route path="/p1" element={<P1 user={user} />} />
+            <Route path="/profile" element={<Profile user={user} />} />
+            <Route path="/pay" element={<Checkout />} />
           </Route>
 
           {/* Admin Routes */}

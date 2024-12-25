@@ -9,6 +9,7 @@ import { Skeleton } from "../../components/Loader";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
 import { User } from "../../types/types";
 import { Navigate } from "react-router-dom";
+import { server } from "../../redux/store";
 
 const userImg =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp";
@@ -37,7 +38,7 @@ const Dashboard = ({ user }: PropsType) => {
               <BsSearch />
               <input type="text" placeholder="Search for data, users, docs" />
               <FaRegBell />
-              <img src={user?.photo || userImg} alt="User" />
+              <img src={user?.photo? `${server}/${user.photo}` : userImg} alt="User" />
             </div>
 
             <section className="widget-container">
