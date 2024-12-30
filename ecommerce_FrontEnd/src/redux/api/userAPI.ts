@@ -1,22 +1,61 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError, MutationDefinition, QueryDefinition } from "@reduxjs/toolkit/query/react";
 import { AllUsersResponse, DeleteUserRequest, MessageResponse, UpdateUserRequest, UserResponse } from "../../types/api-types";
 import { User } from "../../types/types";
-import axios from "axios";
 
+type MutationType<Request, Response> = UseMutation<
+    MutationDefinition<
+        Request,
+        BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+        "users",
+        Response,
+        "userApi"
+    >
+>;
+
+type QueryType<Response> = UseQuery<
+    QueryDefinition<
+        void,  // Request type (void if no request body)
+        BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+        "users",  // Endpoint name
+        Response,
+        "userApi"
+    >
+>;
 
 export const userAPI = createApi({
     reducerPath: "userApi",
-    baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/user/` }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/user/`,
+        credentials: 'include',
+    }),
     tagTypes: ["users"],
 
     endpoints: (builder) => ({
-        login: builder.mutation<MessageResponse, User>({
+        register: builder.mutation<MessageResponse, User>({
             query: (user) => ({
                 url: "new",
                 method: "POST",
                 body: user,
             }),
             invalidatesTags: ["users"],
+        }),
+
+        login: builder.mutation<MessageResponse, User>({
+            query: (user) => ({
+                url: "login",
+                method: "POST",
+                body: user,
+                credentials: "include"
+            }),
+            invalidatesTags: ["users"],
+        }),
+
+        logoutUser: builder.mutation<MessageResponse, void>({
+            query: () => ({
+                url: 'logout',
+                method: 'POST'
+            }),
+            invalidatesTags: ["users"]
         }),
 
         deleteUser: builder.mutation<MessageResponse, DeleteUserRequest>({
@@ -27,30 +66,49 @@ export const userAPI = createApi({
             invalidatesTags: ["users"],
         }),
 
-        allUsers: builder.query<AllUsersResponse, string>({
-            query: (id) => `all?id=${id}`,
-            providesTags: ["users"]
-        }),
-
         updateUser: builder.mutation<MessageResponse, UpdateUserRequest>({
             query: ({ userId, formData }) => ({
                 url: `${userId}`,
                 method: "PUT",
                 body: formData,
             })
-        })
+        }),
+
+        verify: builder.query<UserResponse, void>({
+            query: () => ({
+                url: 'verify',
+                method: 'GET',
+            }),
+            providesTags: ['users'],
+        }),
+
+
+        allUsers: builder.query<AllUsersResponse, string>({
+            query: (id) => `all?id=${id}`,
+            providesTags: ["users"]
+        }),
     }),
 });
 
-export const getUser = async (id: string) => {
-    try {
-        const { data }: { data: UserResponse } = await axios.get(
-            `${import.meta.env.VITE_SERVER}/api/v1/user/${id}`
-        );
-        return data;
-    } catch (error) {
-        throw error;
-    }
+type mutation = {
+    useRegisterMutation: MutationType<User, MessageResponse>
+    useLoginMutation: MutationType<User, MessageResponse>
+    useLogoutUserMutation: MutationType<void, MessageResponse>
+    useUpdateUserMutation: MutationType<
+        UpdateUserRequest,
+        MessageResponse
+    >
+    useDeleteUserMutation: MutationType<
+        DeleteUserRequest,
+        MessageResponse
+    >
 }
 
-export const { useLoginMutation, useDeleteUserMutation, useAllUsersQuery, useUpdateUserMutation } = userAPI;
+type query = {
+    useVerifyQuery: QueryType<UserResponse>;
+    useAllUsersQuery: QueryType<AllUsersResponse>;
+}
+
+export const { useRegisterMutation, useLoginMutation, useLogoutUserMutation, useUpdateUserMutation, useDeleteUserMutation }: mutation = userAPI;
+
+export const { useVerifyQuery, useAllUsersQuery }: query = userAPI;

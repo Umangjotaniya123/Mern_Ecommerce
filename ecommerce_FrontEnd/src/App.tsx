@@ -1,17 +1,16 @@
-import { onAuthStateChanged } from "firebase/auth";
 import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { auth } from "./firebase";
-import { getUser } from "./redux/api/userAPI";
+import { useVerifyQuery } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import "./style/app.scss";
-import { UserReducerInitialState } from "./types/reducer-types";
+
 
 import Header from "./components/Header";
 import Loader from "./components/Loader";
 import { RootState } from "./redux/store";
+import Register from "./pages/Register";
 
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
@@ -46,22 +45,27 @@ const TransactionManagement = lazy(
 );
 
 
-const App = () => {
 
+const App = () => {
   const { user, loading } = useSelector(
     (state: RootState) => state.userReducer
   )
 
   const dispatch = useDispatch();
 
+  const { data, error } = useVerifyQuery();
+
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const data = await getUser(user.uid);
-        dispatch(userExist(data.user));
-      } else dispatch(userNotExist());
-    });
-  }, []);
+    if (data) {
+      // console.log(data);
+      dispatch(userExist(data.user));
+    }
+    if (error) {
+      console.log(error);
+      dispatch(userNotExist());
+    }
+  }, [data, error, dispatch, user]);
+
 
   return loading ? <Loader /> : (
     <Router>
@@ -84,10 +88,15 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/register" element={
+            <ProtectedRoute isAuthenticated={user ? false : true}>
+              <Register />
+            </ProtectedRoute>}
+          />
 
           {/* Logged User Routes */}
           <Route element={<ProtectedRoute isAuthenticated={user ? true : false} />}>
-            <Route path="/shipping" element={<Shipping addressInfo={user?.addressInfo!} userId={user?._id!} />} />
+            <Route path="/shipping" element={<Shipping addressInfo={user?.addressInfo}/>} />
             <Route path="/orders" element={<Orders user={user} />} />
             <Route path="/p1" element={<P1 user={user} />} />
             <Route path="/profile" element={<Profile user={user} />} />

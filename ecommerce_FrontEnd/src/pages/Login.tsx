@@ -1,78 +1,80 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { FcGoogle } from "react-icons/fc";
-import { auth } from "../firebase";
+import { useForm } from "react-hook-form";
+import { User } from "../types/types";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { MessageResponse } from "../types/api-types";
+import { responseToast } from "../utils/features";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
 
-    const [gender, setGender] = useState("");
-    const [date, setDate] = useState("");
+    const [loginUser] = useLoginMutation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const [login] = useLoginMutation();
-
-    const loginHandler = async () => {
-        try {
-            const provider = new GoogleAuthProvider();
-            const { user } = await signInWithPopup(auth, provider);
-
-            const res = await login({
-                name: user.displayName!,
-                email: user.email!,
-                photo: user.photoURL!,
-                gender,
-                role: "user",
-                dob: date,
-                _id: user.uid,
-            });
-
-            if ("data" in res) {
-                const message = res.data?.message;
-                toast.success(message!);
-
-            } else {
-                const error = res.error as FetchBaseQueryError;
-                const message = (error.data as MessageResponse).message;
-                toast.error(message);
-            }
-
-            // console.log(user);
-
-        } catch (error) {
-            toast.error("Sign In Fail");
+    const { register, handleSubmit, formState: { errors } } = useForm<User>({
+        defaultValues: {
+            email: '',
+            password: '',
         }
+    });
+
+    const onSubmit = async (data: User) => {
+        // console.log(data);
+
+        const res = await loginUser(data);
+        if (res.data) {
+            dispatch({ type: "someSlice/success", payload: res.data });
+        }
+        else if (res.error) {
+            dispatch({ type: "someSlice/error", payload: res.error });
+        }
+
+        responseToast(res, navigate, '/');
+        // console.log('res-', res);
+        // console.log('Cookie - ', document.cookie);
     }
 
     return (
         <div className="login">
-            <main>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <h1 className="heading">Login</h1>
-                <div>
-                    <label htmlFor="">Gender</label>
-                    <select value={gender} onChange={(e) => setGender(e.target.value)}>
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="">date of Birth</label>
-                    <input type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <p>Already Signed In Once</p>
-                    <button onClick={loginHandler}>
-                        <FcGoogle /> <span>Sign in with Google</span>
-                    </button>
-                </div>
+                <div className="box">
 
-            </main>
+                    {/* Email */}
+                    <div className="input">
+                        <label htmlFor="">Email</label>
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            {...register('email', { required: 'Email is required', pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/ })}
+                        />
+                        {errors.email && (errors.email.type === 'required'
+                            ? <small>{errors.email.message}</small>
+                            : <small>Invalid Email</small>
+                        )}
+                    </div>
+
+                    {/* Password */}
+                    <div className="input">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            {...register('password', { required: 'Enter Password', minLength: 6 })}
+                        />
+                        {errors.password && (errors.password.type === 'required'
+                            ? <small>{errors.password.message}</small>
+                            : <small>Minimum 6 characters required</small>
+                        )}
+                    </div>
+                </div>
+                <div className="buttons">
+                    <button className="btn">Sign In</button>
+                    <p>
+                        Create new account? <Link to='/register' className="link">Sign Up</Link>
+                    </p>
+                </div>
+            </form>
         </div>
     )
 }

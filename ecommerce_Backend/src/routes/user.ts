@@ -1,11 +1,14 @@
 import express from "express";
-import { deleteUser, getAllUsers, getUsers, newUser, updateUser } from "../controllers/user.js";
-import { adminOnly } from "../middlewares/auth.js";
+import { deleteUser, getAllUsers, getUsers, loginUser, logoutUser, registerUser, updateUser } from "../controllers/user.js";
+import { adminOnly, verifyToken } from "../middlewares/auth.js";
 import { singleUpload } from "../middlewares/multer.js";
 
 const app = express.Router();
 
-app.post("/new", newUser)
+app.get("/verify", verifyToken)
+app.post("/new", registerUser);
+app.post("/login", loginUser);
+app.post("/logout", logoutUser);
 
 app.get("/all", adminOnly, getAllUsers);
 

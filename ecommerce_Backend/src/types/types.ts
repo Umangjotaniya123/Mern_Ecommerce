@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 export interface NewUserRequestBody {
     name: string;
     email: string;
+    password: string;
     photo: string;
     gender: string;
     _id: string;

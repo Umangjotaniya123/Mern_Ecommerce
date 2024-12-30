@@ -15,7 +15,7 @@ const initialState: CartReducerInitialState = {
         city: "",
         state: "",
         country: "",
-        pinCode: 0,
+        pincode: 0,
     },
 };
 

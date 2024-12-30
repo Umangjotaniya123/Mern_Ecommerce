@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 import { Product } from "../models/product.js";
 import { myCache } from "../app.js";
+import { IUser } from "../models/user.js";
 
 export const connectDB = (URI: string) => {
     mongoose.connect(URI, {
@@ -46,6 +47,17 @@ export const invalidateCache = (
         ]);
     }
 };
+
+type cookieProps = {
+    user: IUser | null;
+    res: any;
+    message: string;
+    statusCode: number;
+}
+
+// export const setCookie = (user, res, message, statusCode): cookieProps => {
+
+// };
 
 // From Order Items...
 export const reduceStock = async (orderItems: OrderItemType[]) => {

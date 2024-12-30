@@ -24,15 +24,31 @@
     }
   }
 
-  >form {
-    max-width: 450px;
-    width: 100%;
+  form {
     @include flex(column, center, stretch, 1rem);
+    @include baseShadow;
     padding: 2rem;
+    width: 60%;
+
+    h5 {
+      font-size: larger;
+    }
+
+    .address {
+      margin: 15px 0px;
+      border-bottom: 1px solid rgb(136, 130, 130);
+      border-radius: 10px;
+      padding: 0px 10px;
+      @include flex(row, flex-start);
+
+      span {
+        font-weight: 500;
+      }
+    }
 
     >h1 {
       @include heading(2px);
-      margin: 2rem;
+      margin: 1rem 2rem;
       text-align: center;
     }
 

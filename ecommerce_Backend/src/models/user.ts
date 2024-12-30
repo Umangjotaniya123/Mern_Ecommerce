@@ -10,10 +10,11 @@ interface Address{
     addType: string;
 }
 // Typescript Model
-interface IUser extends Document {
+export interface IUser extends Document {
     _id: string;
     name: string;
     email: string;
+    password: string;
     photo: string;
     role: "admin" | "user";
     gender: "male" | "female";
@@ -26,10 +27,10 @@ interface IUser extends Document {
 }
 
 const schema = new mongoose.Schema({
-    _id: {
-        type: String,
-        required: [true, "Please enter ID"],
-    },
+    // _id: {
+    //     type: String,
+    //     // required: [true, "Please enter ID"],
+    // },
     name: {
         type: String,
         required: [true, "Please add Name"],
@@ -40,9 +41,14 @@ const schema = new mongoose.Schema({
         required: [true, "Please enter Email"],
         validate: validator.default.isEmail,
     },
+    password: {
+        type: String,
+        required: [true, 'Please enter Password'],
+        select: false,
+    },
     photo: {
         type: String,
-        required: [true, "Please add ID"],
+        // required: [true, "Please add ID"],
     },
     role: {
         type: String,

@@ -1,4 +1,4 @@
-import { Address, Bar, CartItem, Line, Order, Pie, Product, ShippingInfo, Stats, User } from "./types";
+import { Bar, CartItem, Line, Order, Pie, Product, ShippingInfo, Stats, User } from "./types";
 
 export type CustomError = {
   status: number;

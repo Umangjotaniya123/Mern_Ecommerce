@@ -1,6 +1,7 @@
 export type User = {
     name: string;
     email: string;
+    password: string;
     photo: string;
     gender: string;
     role: string;
@@ -32,7 +33,7 @@ export type ShippingInfo = {
     city: string;
     state: string;
     country: string;
-    pinCode: number;
+    pincode: number | undefined;
 }
 
 export type CartItem = {

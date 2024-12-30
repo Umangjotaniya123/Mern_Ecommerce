@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { FaSearch, FaShoppingBag, FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User } from "../types/types";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
-import toast from "react-hot-toast";
+import { useLogoutUserMutation } from "../redux/api/userAPI";
+import { responseToast } from "../utils/features";
 
 interface PropsType {
     user: User | null;
@@ -13,15 +12,14 @@ interface PropsType {
 const Header = ({ user }: PropsType) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
+    const [logoutUser] = useLogoutUserMutation();
 
     const logoutHandler = async () => {
-        try {
-            await signOut(auth);
-            toast.success("Sign Out Success");
-            setIsOpen(false);
-        } catch (error) {
-            toast.error("Sign Out Fail");
-        }
+
+        const res = await logoutUser();
+        setIsOpen(!isOpen);
+        responseToast(res, navigate, '/');
     }
 
     return (

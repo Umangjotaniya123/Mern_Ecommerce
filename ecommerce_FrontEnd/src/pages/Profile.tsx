@@ -50,7 +50,7 @@ const Profile = ({ user: updateUser }: PropsType) => {
     ).toISOString().split("T")[0]
 
     const onSubmit = async (data: User) => {
-        console.log(data);
+        // console.log(data);
         const formData = new FormData();
 
         // Add all non-file fields to FormData
@@ -78,12 +78,13 @@ const Profile = ({ user: updateUser }: PropsType) => {
             }
             formData.append('photo', file);
         }
-
+        
+        // console.log(data.photo);
         const res = await userUpdate({
             formData,
             userId: user?._id!,
         });
-
+        // console.log(res);
         if ('data' in res) {
             setUser({
                 ...updateUser,
@@ -117,7 +118,7 @@ const Profile = ({ user: updateUser }: PropsType) => {
                         <h1 className="heading">Profile</h1>
                         <div className="box">
                             <div className="box_left">
-                                <img src={img} alt="Photo" />
+                            {user?.photo && <img src={img} alt="Photo" />}
                                 <p>{name}</p>
                             </div>
                             <div className="box_right">

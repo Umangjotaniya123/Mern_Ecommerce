@@ -1,0 +1,84 @@
+.register {
+    @include flex(column);
+
+    >form {
+        width: 100%;
+        height: 80%;
+        max-width: 80%;
+        // padding: 2rem;
+        @include baseShadow;
+        @include flex(column, center, stretch);
+
+        .box {
+            @include flex(row, stretch, stretch, 0);
+            margin: 0px 50px 15px 50px;
+            flex-wrap: wrap;
+            // margin-left: 0px; 
+
+            small {
+                color: red;
+                /* Error messages in red to signify an issue */
+                font-size: 12px;
+                /* Smaller font size to differentiate from regular text */
+                margin-top: 4px;
+                /* Adds spacing from the input field */
+                display: block;
+                /* Ensures it appears on a new line */
+                background: rgba(255, 0, 0, 0.1);
+                /* Light red background */
+                padding: 2px 4px;
+                /* Padding for better readability */
+                border-radius: 4px;
+                /* Rounded corners for the box */
+                font-weight: bold;
+                /* Bold text for emphasis */
+            }
+        }
+
+        .input {
+            width: 30%;
+            margin: 10px;
+            font-size: 1rem;
+            @include flex(column, flex-start, stretch, 0.2rem);
+            overflow: hidden;
+
+            >input,
+            >select {
+                @include inputStyle;
+                padding: 10px;
+                border: 1px solid rgba(162, 162, 162, 0.53);
+                border-radius: 5px;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+        }
+
+    }
+
+    .buttons {
+        @include flex(column, center, center, 1rem);
+        margin: 15px;
+
+        .btn {
+            width: 30%;
+            height: 2.5rem;
+            @include btn(unset, rgb(62, 125, 242), white);
+            @include flex;
+            border: 1px solid rgb(62, 125, 242);
+            border-radius: 10px;
+            font-size: 1rem;
+    
+        }
+        >p {
+            width: 100%;
+            text-align: center;
+            color: rgb(73, 73, 72);
+
+            .link:hover {
+                text-decoration: underline;
+                color: rgb(40, 95, 197);
+            }
+        }
+    }
+
+}
