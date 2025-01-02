@@ -13,17 +13,24 @@ const schema = new mongoose.Schema({
         type: Number,
         required: [true, "Please add Price"],
     },
+    quantity: {
+        type: Number,
+        required: [true, "Please add Quantity"],
+    },
     stock: {
         type: Number,
         required: [true, "Please add Stock"],
     },
-    category: {
+    productId: {
         type: String,
-        required: [true, "Please add Category"],
-        trim: true,
+        required: [true, 'Please add ProductId']
     },
+    userId: {
+        type: String,
+        required: [true, 'Please add userId']
+    }
 }, {
     timestamps: true,
 });
 
-export const Product = mongoose.model("Product", schema);
+export const CartItems = mongoose.model("CartItems", schema);

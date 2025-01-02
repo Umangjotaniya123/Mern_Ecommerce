@@ -34,4 +34,14 @@ export const verifyToken = TryCatch(async (req, res, next) => {
         return next(new ErrorHandler('User Not Found', 401));
 
     return res.json({ user });
+});
+
+
+export const isUserLogin = TryCatch(async (req, res, next) => {
+    const { token } = req.cookies;
+
+    if(!token)
+        return next(new ErrorHandler("Please Login First!!!", 401));
+
+    next();
 })
