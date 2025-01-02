@@ -4,11 +4,20 @@ import { useCategoriesQuery, useSearchProductsQuery } from "../redux/api/product
 import { CustomError } from "../types/api-types";
 import toast from "react-hot-toast";
 import { Skeleton } from "../components/Loader";
-import { useDispatch } from "react-redux";
-import { CartItem } from "../types/types";
+import { CartItem, User } from "../types/types";
 import { addToCart } from "../redux/reducer/cartReducer";
+import { useNavigate } from "react-router-dom";
+import { useNewCartItemMutation } from "../redux/api/cartItems";
+import { responseToast } from "../utils/features";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+
 
 const Search = () => {
+
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const {
     data: categoriesResponse,
@@ -23,11 +32,11 @@ const Search = () => {
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
 
-  const { 
-    isLoading: productLoading, 
-    data: searchedData, 
-    isError: isProductError, 
-    error: productError  
+  const {
+    isLoading: productLoading,
+    data: searchedData,
+    isError: isProductError,
+    error: productError
   } = useSearchProductsQuery({
     search, sort, category, page, price: maxPrice,
   });
@@ -43,13 +52,18 @@ const Search = () => {
   };
 
   const dispatch = useDispatch();
+  const [newCartItem] = useNewCartItemMutation();
+  const navigate = useNavigate();
 
-  const addToCartHandler = (cartItem: CartItem) => {
+  const addToCartHandler = async (cartItem: CartItem) => {
     if (cartItem.stock < 1) return toast.error("Out of Stock");
 
-    dispatch(addToCart(cartItem));
+    const res = await newCartItem(cartItem);
+    responseToast(res, navigate, '');
 
-    toast.success("Added to Cart"); 
+    // dispatch(addToCart(cartItem));
+
+    // toast.success("Added to Cart");
   };
 
   const isPrevPage = page > 1;
@@ -97,21 +111,22 @@ const Search = () => {
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-        {productLoading ? <Skeleton length={10} /> :
-          searchedData?.products.map(i => (
-            <div className="search-product-list">
+        <div className="search-product-list">
+          {productLoading ? <Skeleton length={10} /> :
+            searchedData?.products.map(i => (
               <ProductCard
                 key={i._id}
                 productId={i._id}
+                userId={user?._id || ''}
                 name={i.name}
                 price={i.price}
                 stock={i.stock}
                 handler={addToCartHandler}
                 photo={i.photo}
               />
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
 
         {searchedData && searchedData.totalPage > 1 && (
           <article>

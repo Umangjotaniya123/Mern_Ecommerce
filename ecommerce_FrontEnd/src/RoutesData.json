@@ -1,0 +1,106 @@
+{
+    "homePageRoute": [
+        {
+            "path": "/",
+            "component": "./pages/Home"
+        },
+        {
+            "path": "/search",
+            "component": "./pages/Search"
+        },
+        {
+            "path": "/cart",
+            "component": "./pages/Cart"
+        },
+        {
+            "path": "*",
+            "component": "./pages/NotFound"
+        }
+    ],
+    "notLoggedUserRoute": [
+        {
+            "path": "/login",
+            "component": "./pages/Login"
+        },
+        {
+            "path": "/register",
+            "component": "./pages/Register"
+        }
+    ],
+    "loggedUserRoute": [
+        {
+            "path": "/shipping",
+            "component": "./pages/Shipping"
+        },
+        {
+            "path": "/orders",
+            "component": "./pages/Orders"
+        },
+        {
+            "path": "/p1",
+            "component": "./pages/P1"
+        },
+        {
+            "path": "/profile",
+            "component": "./pages/Profile"
+        },
+        {
+            "path": "/pay",
+            "component": "./pages/Checkout"
+        }
+    ],
+    "adminRoute": [
+        {
+            "path": "/admin/dashboard",
+            "component": "./pages/admin/dashboard"
+        },
+        {
+            "path": "/admin/product",
+            "component": "./pages/admin/products"
+        },
+        {
+            "path": "/admin/customer",
+            "component": "./pages/admin/customers"
+        },
+        {
+            "path": "/admin/transaction",
+            "component": "./pages/admin/transaction"
+        },
+        {
+            "path": "/admin/chart/bar",
+            "component": "./pages/admin/charts/barcharts"
+        },
+        {
+            "path": "/admin/chart/pie",
+            "component": "./pages/admin/charts/piecharts"
+        },
+        {
+            "path": "/admin/chart/line",
+            "component": "./pages/admin/charts/linecharts"
+        },
+        {
+            "path": "/admin/app/coupon",
+            "component": "./pages/admin/apps/coupon"
+        },
+        {
+            "path": "/admin/app/stopwatch",
+            "component": "./pages/admin/apps/stopwatch"
+        },
+        {
+            "path": "/admin/app/toss",
+            "component": "./pages/admin/apps/toss"
+        },
+        {
+            "path": "/admin/product/new",
+            "component": "./pages/admin/management/newproduct"
+        },
+        {
+            "path": "/admin/product/:id",
+            "component": "./pages/admin/management/productmanagement"
+        },
+        {
+            "path": "/admin/transaction/:id",
+            "component": "./pages/admin/management/transactionmanagement"
+        }
+    ]
+}

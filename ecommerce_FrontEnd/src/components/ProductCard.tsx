@@ -4,15 +4,16 @@ import { CartItem } from "../types/types";
 
 type ProductsProps = {
   productId: string;
+  userId: string;
   photo: string;
   name: string;
   price: number;
   stock: number;
-  handler: (cartItem: CartItem) => string | undefined;
-};
+  handler: (cartItem: CartItem) => Promise<string | undefined>;
+}
 
 
-const ProductCard = ({ productId, price, name, photo, stock, handler }: ProductsProps) => {
+const ProductCard = ({ productId, userId, price, name, photo, stock, handler }: ProductsProps) => {
   return (
     <div className="product-card">
       <img src={`${server}/${photo}`} alt={name} />
@@ -20,7 +21,7 @@ const ProductCard = ({ productId, price, name, photo, stock, handler }: Products
       <span>₹{price}</span>
       <div>
         <button
-          onClick={() => handler({ productId, price, name, photo, stock, quantity: 1 })}
+          onClick={() => handler({ productId, userId, price, name, photo, stock, quantity: 1 })}
         >
           <FaPlus />
         </button>

@@ -1,55 +1,75 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { CartReducerInitialState } from "../types/reducer-types";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { server } from "../redux/store";
-import toast from "react-hot-toast";
 import { saveShippingInfo } from "../redux/reducer/cartReducer";
+import { RootState, server } from "../redux/store";
 import { Address } from "../types/types";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-
-interface PropsType {
-    addressInfo: Address[] | undefined;
-    // userId: string;
-};
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const initialAddress = {
-    address: '',
-    city: '',
-    state: '',
-    country: '',
-    pincode: undefined,
-    addType: '',
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    pincode: null!,
+    addType: "",
 };
 
-const Shipping = ({ addressInfo }: PropsType) => {
+const Shipping = () => {
+    const { user } = useSelector((state: RootState) => state.userReducer);
+    const { cartItems, total } = useSelector((state: RootState) => state.cartReducer);
 
-    const { cartItems, total } = useSelector(
-        (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
-    );
-
+    const addressInfo: Address[] | undefined = user?.addressInfo;
+    const [shippingInfo, setShippingInfo] = useState<Address>(initialAddress);
+    const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(0);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [shippingInfo, setShippingInfo] = useState<Address>(initialAddress);
-    const { register, handleSubmit, formState: {errors} } = useForm<Address>({
-        defaultValues: shippingInfo,
-    });
+    const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm<Address>({ defaultValues: initialAddress });
 
+    useEffect(() => {
+        if (addressInfo && addressInfo.length > 0) {
+            // Set the first address as default
+            setShippingInfo(addressInfo[0]);
+            setSelectedAddressIndex(0);
+            Object.entries(addressInfo[0]).forEach(([key, value]) =>
+                setValue(key as keyof Address, value)
+            );
+        } else {
+            // Reset to an empty form for new address
+            reset(initialAddress);
+        }
+    }, [addressInfo, reset, setValue]);
 
-    const changehandler = (
-        e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-        setShippingInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    useEffect(() => {
+        if (cartItems.length <= 0) return navigate("/cart");
+    }, [cartItems]);
+
+    const handleSelect = (index: number) => {
+        reset(initialAddress);
+        setSelectedAddressIndex(index);
+        if (addressInfo && addressInfo[index]) {
+            const selectedAddress = addressInfo[index];
+            setShippingInfo(selectedAddress);
+            Object.entries(selectedAddress).forEach(([key, value]) =>
+                setValue(key as keyof Address, value)
+            );
+        }
     };
 
-    const submitHandle = async (e: any) => {
-        e.preventDefault();
+    const handleNewAddress = () => {
+        setSelectedAddressIndex(-1);
+        setShippingInfo(initialAddress);
+        reset(initialAddress);
+        // setValue("pincode", null);
+    };
 
-        dispatch(saveShippingInfo(shippingInfo));
-
+    const onSubmit = async (data: Address) => {
+        
+        dispatch(saveShippingInfo(data));
         try {
             const { data } = await axios.post(
                 `${server}/api/v1/payment/create`,
@@ -70,121 +90,85 @@ const Shipping = ({ addressInfo }: PropsType) => {
         }
     };
 
-    const onSubmit = (data: Address) => {
-        console.log(data);
-    }
-
-    const handleSelect = (e: any, index: number) => {
-        setShippingInfo(initialAddress);
-        if (addressInfo && addressInfo[index]) {
-            const add = addressInfo[index];
-            setShippingInfo({
-                address: add.address as string,
-                city: add.city,
-                state: add.state,
-                country: add.country,
-                pincode: add.pincode as number | undefined,
-                addType: add.addType
-            });
-        }
-    }
-
-    useEffect(() => {
-        if (cartItems.length <= 0) return navigate("/cart");
-    }, [cartItems]);
-
     return (
         <div className="shipping">
-            <button className="back-btn" onClick={() => navigate("/cart")}><BiArrowBack /></button>
+            <button className="back-btn" onClick={() => navigate("/cart")}>
+                <BiArrowBack />
+            </button>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <h5>Select Shipping Address</h5>
-                {addressInfo && addressInfo.map(({ address, city, state, country, pincode, addType }, index) => (
-                    <div className="address">
-                        <input type="radio" name="select" onClick={(e) => handleSelect(e, index)} />
-                        <div>
-                            <div key={index}><span>{`${addType} Address --> `}</span>{`${address}, ${city}, ${state}, ${country}.`}</div>
-                            <div><span>{`Pincode --> `}</span>{pincode}</div>
+                {addressInfo &&
+                    addressInfo.map((address, index) => (
+                        <div key={index} className="address">
+                            <input
+                                type="radio"
+                                name="select"
+                                checked={selectedAddressIndex === index}
+                                onChange={() => handleSelect(index)}
+                            />
+                            <label>
+                                <p><span>{`${address.addType} Address: `}</span>
+                                {`${address.address}, ${address.city}, ${address.state}, ${address.country}.`}</p>
+                                <p><span>Pincode: </span>{address.pincode}</p>
+                            </label>
                         </div>
-                    </div>
-                ))}
-                <h1>New Shipping Address</h1>
-                <div className='box' >
-                    {/* Landmark */}
+                    ))}
+                <button type="button" onClick={handleNewAddress}>
+                    Add New Address
+                </button>
+
+                <h1>{selectedAddressIndex === -1 ? "New Address" : "Edit Address"}</h1>
+                <div className="form-fields">
                     <div className="input">
-                        <label htmlFor="">Landmark</label>
-                        <input type="text"
-                            defaultValue={shippingInfo.address}
+                        <label>Landmark</label>
+                        <input
                             placeholder="Landmark"
-                            {...register('address', { required: 'Landmark is required' })}
+                            {...register("address", { required: "Landmark is required" })}
                         />
-                        {/* {(errors)?.address && <small>{(errors)?.address?.message}</small>} */}
+                        {errors.address && <small className="error">{errors.address.message}</small>}
                     </div>
-
-                    {/* City */}
                     <div className="input">
-                        <label htmlFor="">City</label>
-                        <input type="text"
-                            defaultValue={shippingInfo.city}
+                        <label>City</label>
+                        <input
                             placeholder="City"
-                            {...register(`city`, { required: 'City is required' })}
+                            {...register("city", { required: "City is required" })}
                         />
-                        {/* {(errors.addressInfo as any)?.[_index]?.city && <small>
-                            {(errors.addressInfo as any)?.[_index]?.city.message}
-                        </small>} */}
+                        {errors.city && <small className="error">{errors.city.message}</small>}
                     </div>
-
-                    {/* State */}
                     <div className="input">
-                        <label htmlFor="">State</label>
-                        <input type="text"
-                            defaultValue={shippingInfo.state}
+                        <label>State</label>
+                        <input
                             placeholder="State"
-                            {...register(`state`, { required: 'State is required' })}
+                            {...register("state", { required: "State is required" })}
                         />
-                        {/* {(errors.addressInfo as any)?.[_index]?.state && <small>
-                            {(errors.addressInfo as any)?.[_index]?.state.message}
-                        </small>} */}
+                        {errors.state && <small className="error">{errors.state.message}</small>}
                     </div>
-
-                    {/* Country */}
                     <div className="input">
-                        <label htmlFor="">Country</label>
-                        <select
-                            defaultValue={shippingInfo.country}
-                            {...register(`country`, { required: 'Select your country' })}
-                        >
+                        <label>Country</label>
+                        <select {...register("country", { required: "Country is required" })}>
                             <option value="">Choose Country</option>
                             <option value="India">India</option>
                         </select>
-                        {/* {(errors.addressInfo as any)?.[_index]?.country && <small>
-                            {(errors.addressInfo as any)?.[_index]?.country.message}
-                        </small>} */}
+                        {errors.country && <small className="error">{errors.country.message}</small>}
                     </div>
-
-                    {/* Pin Code */}
                     <div className="input">
-                        <label htmlFor="">Pincode</label>
-                        <input type="number"
-                            defaultValue={shippingInfo.pincode}
+                        <label>Pincode</label>
+                        <input
+                            type="number"
                             placeholder="Pincode"
-                            {...register(`pincode`, {
-                                required: 'Pincode is required',
-                                minLength: 6, maxLength: 6,
+                            {...register("pincode", {
+                                required: "Pincode is required",
+                                minLength: { value: 6, message: "Pincode must be 6 digits" },
+                                maxLength: { value: 6, message: "Pincode must be 6 digits" },
                             })}
                         />
-                        {/* {(errors.addressInfo as any)?.[_index]?.pincode
-                            && ((errors.addressInfo as any)?.[_index]?.pincode.type === 'required' ?
-                                <small>{(errors.addressInfo as any)?.[_index]?.pincode.message}</small>
-                                : <small>Enterd 6 degits code</small>
-                            )} */}
+                        {errors.pincode && <small className="error">{errors.pincode.message}</small>}
                     </div>
                 </div>
-
-                <button type="reset" onClick={() => setShippingInfo(initialAddress)}>Reset</button>
-                <button >Pay Now</button>
-            </form >
-        </div >
-    )
-}
+                <button type="submit">Proceed to Pay</button>
+            </form>
+        </div>
+    );
+};
 
 export default Shipping;

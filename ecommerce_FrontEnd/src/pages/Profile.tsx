@@ -5,16 +5,16 @@ import { server } from "../redux/store";
 import { responseToast } from "../utils/features";
 import { useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
-import FormCard from "../components/FormCard";
+import AddressList from "../components/AddressList";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
-interface PropsType {
-    user: User | null;
-}
+const Profile = () => {
 
-
-const Profile = ({ user: updateUser }: PropsType) => {
-
+    const { user: updateUser, loading } = useSelector(
+        (state: RootState) => state.userReducer
+      )
     const [user, setUser] = useState<User>(updateUser!);
     const { name, gender, email } = user!;
 
@@ -214,7 +214,7 @@ const Profile = ({ user: updateUser }: PropsType) => {
                             </div>
 
                             {/* Address_Information */}
-                            <FormCard fieldsArray={fieldsArray} />
+                            <AddressList fieldsArray={fieldsArray} />
 
                             <div className="buttons">
                                 <button className="cancel" onClick={handleBack}>Cancel</button>

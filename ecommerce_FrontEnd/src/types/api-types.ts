@@ -62,6 +62,16 @@ export type OrderDetailsResponse = {
   order: Order;
 };
 
+export type AllCartItemsResponse = {
+  success: boolean;
+  cartItems: CartItem[];
+}
+
+export type UpdateQuantityRequest = {
+  id: string;
+  quantity: number;
+}
+
 export type StatsResponse = {
   success: boolean;
   stats: Stats;

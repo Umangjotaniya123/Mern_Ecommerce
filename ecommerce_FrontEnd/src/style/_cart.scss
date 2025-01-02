@@ -88,6 +88,7 @@
       @include flex;
       cursor: pointer;
       font-size: 1.2rem;
+      background-color: #c3c2c5;
       &:hover {
         background-color: $color2;
         color: $color1;

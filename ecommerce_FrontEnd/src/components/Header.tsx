@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { User } from "../types/types";
 import { useLogoutUserMutation } from "../redux/api/userAPI";
 import { responseToast } from "../utils/features";
+import { useDispatch } from "react-redux";
+import { resetCart } from "../redux/reducer/cartReducer";
 
 interface PropsType {
     user: User | null;
@@ -13,12 +15,14 @@ const Header = ({ user }: PropsType) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [logoutUser] = useLogoutUserMutation();
 
     const logoutHandler = async () => {
 
         const res = await logoutUser();
         setIsOpen(!isOpen);
+        dispatch(resetCart())
         responseToast(res, navigate, '/');
     }
 

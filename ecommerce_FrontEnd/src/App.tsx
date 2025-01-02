@@ -4,47 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useVerifyQuery } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
-import "./style/app.scss";
+import { homePageRoute, notLoggedUserRoute, loggedUserRoute, adminRoute } from "./RoutesData.json";
 
+import "./style/app.scss";
 
 import Header from "./components/Header";
 import Loader from "./components/Loader";
 import { RootState } from "./redux/store";
-import Register from "./pages/Register";
 
-const Home = lazy(() => import("./pages/Home"));
-const Search = lazy(() => import("./pages/Search"));
-const Cart = lazy(() => import("./pages/Cart"));
-const Shipping = lazy(() => import("./pages/Shipping"));
-const Login = lazy(() => import("./pages/Login"));
-const Orders = lazy(() => import("./pages/Orders"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Checkout = lazy(() => import("./pages/Checkout"));
-const P1 = lazy(() => import("./pages/P1"));
-const Profile = lazy(() => import("./pages/Profile"));
-
-
-// Using React admin Dashboared
-const Dashboard = lazy(() => import("./pages/admin/dashboard"));
-const Products = lazy(() => import("./pages/admin/products"));
-const Customers = lazy(() => import("./pages/admin/customers"));
-const Transaction = lazy(() => import("./pages/admin/transaction"));
-const Barcharts = lazy(() => import("./pages/admin/charts/barcharts"));
-const Piecharts = lazy(() => import("./pages/admin/charts/piecharts"));
-const Linecharts = lazy(() => import("./pages/admin/charts/linecharts"));
-const Coupon = lazy(() => import("./pages/admin/apps/coupon"));
-const Stopwatch = lazy(() => import("./pages/admin/apps/stopwatch"));
-const Toss = lazy(() => import("./pages/admin/apps/toss"));
-const NewProduct = lazy(() => import("./pages/admin/management/newproduct"));
-const ProductManagement = lazy(
-  () => import("./pages/admin/management/productmanagement")
-);
-const TransactionManagement = lazy(
-  () => import("./pages/admin/management/transactionmanagement")
-);
-
-
 
 const App = () => {
   const { user, loading } = useSelector(
@@ -75,36 +43,33 @@ const App = () => {
 
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/cart" element={<Cart />} />
+          {homePageRoute.map((route, index) => {
+            const Component = lazy(() => import(`${route.component}`));
+            return <Route key={index} path={route.path} element={<Component />} />;
+          })}
 
           {/* Not Logged In Route */}
-          <Route
-            path="/login"
-            element={
-              <ProtectedRoute isAuthenticated={user ? false : true}>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/register" element={
-            <ProtectedRoute isAuthenticated={user ? false : true}>
-              <Register />
-            </ProtectedRoute>}
-          />
+          {notLoggedUserRoute.map((route, index) => {
+            const Component = lazy(() => import(`${route.component}`));
+            return <Route key={index}
+              path={route.path}
+              element={
+                <ProtectedRoute isAuthenticated={user ? false : true}>
+                  <Component />
+                </ProtectedRoute>
+              }
+            />
+          })}
 
           {/* Logged User Routes */}
           <Route element={<ProtectedRoute isAuthenticated={user ? true : false} />}>
-            <Route path="/shipping" element={<Shipping addressInfo={user?.addressInfo}/>} />
-            <Route path="/orders" element={<Orders user={user} />} />
-            <Route path="/p1" element={<P1 user={user} />} />
-            <Route path="/profile" element={<Profile user={user} />} />
-            <Route path="/pay" element={<Checkout />} />
+            {loggedUserRoute.map((route, index) => {
+              const Component = lazy(() => import(`${route.component}`));
+              return <Route key={index} path={route.path} element={<Component />} />;
+            })}
           </Route>
 
           {/* Admin Routes */}
-
           <Route
             element={
               <ProtectedRoute
@@ -114,27 +79,12 @@ const App = () => {
               />
             }
           >
-            <Route path="/admin/dashboard" element={<Dashboard user={user} />} />
-            <Route path="/admin/product" element={<Products user={user} />} />
-            <Route path="/admin/customer" element={<Customers user={user} />} />
-            <Route path="/admin/transaction" element={<Transaction user={user} />} />
-            {/* Charts */}
-            <Route path="/admin/chart/bar" element={<Barcharts user={user} />} />
-            <Route path="/admin/chart/pie" element={<Piecharts user={user} />} />
-            <Route path="/admin/chart/line" element={<Linecharts user={user} />} />
-            {/* Apps */}
-            <Route path="/admin/app/coupon" element={<Coupon />} />
-            <Route path="/admin/app/stopwatch" element={<Stopwatch />} />
-            <Route path="/admin/app/toss" element={<Toss />} />
-
-            {/* Management */}
-            <Route path="/admin/product/new" element={<NewProduct user={user} />} />
-
-            <Route path="/admin/product/:id" element={<ProductManagement user={user} />} />
-
-            <Route path="/admin/transaction/:id" element={<TransactionManagement user={user} />} />
+            {adminRoute.map((route, index) => {
+              const Component = lazy(() => import(`${route.component}`));
+              return <Route key={index} path={route.path} element={<Component />} />;
+            })}
           </Route>
-          <Route path="*" element={<NotFound />} />
+
         </Routes>
       </Suspense>
       <Toaster position="bottom-center" />

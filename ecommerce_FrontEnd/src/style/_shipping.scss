@@ -44,6 +44,9 @@
       span {
         font-weight: 500;
       }
+      label {
+        @include flex(column, center, flex-start, 0.1rem)
+      }
     }
 
     >h1 {
@@ -62,6 +65,25 @@
         border: 1px solid rgba(162, 162, 162, 0.53);
         border-radius: 5px;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      small {
+        color: red;
+        /* Error messages in red to signify an issue */
+        font-size: 12px;
+        /* Smaller font size to differentiate from regular text */
+        margin-top: 4px;
+        /* Adds spacing from the input field */
+        display: block;
+        /* Ensures it appears on a new line */
+        background: rgba(255, 0, 0, 0.1);
+        /* Light red background */
+        padding: 2px 4px;
+        /* Padding for better readability */
+        border-radius: 4px;
+        /* Rounded corners for the box */
+        font-weight: bold;
+        /* Bold text for emphasis */
       }
     }
 

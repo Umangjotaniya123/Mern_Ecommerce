@@ -8,6 +8,8 @@ import { Skeleton } from "../../components/Loader";
 import { useAllOrdersQuery } from "../../redux/api/orderAPI";
 import { CustomError } from "../../types/api-types";
 import { User } from "../../types/types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface DataType {
   user: string;
@@ -45,11 +47,11 @@ const columns: Column<DataType>[] = [
   },
 ];
 
-interface PropsType {
-  user: User | null;
-};
+const Transaction = () => {
 
-const Transaction = ({ user }: PropsType) => {
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const { data, isError, isLoading, error } = useAllOrdersQuery(user?._id!);
 

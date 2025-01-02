@@ -9,7 +9,8 @@ import { CustomError } from "../../types/api-types";
 import toast from "react-hot-toast";
 import { Skeleton } from "../../components/Loader";
 import { responseToast } from "../../utils/features";
-import { server } from "../../redux/store";
+import { RootState, server } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 interface DataType {
   avatar: ReactElement;
@@ -18,10 +19,6 @@ interface DataType {
   gender: string;
   role: string;
   action: ReactElement;
-};
-
-interface PropsType {
-  user: User | null;
 };
 
 const columns: Column<DataType>[] = [
@@ -51,7 +48,11 @@ const columns: Column<DataType>[] = [
   },
 ];
 
-const Customers = ({ user }: PropsType) => {
+const Customers = () => {
+
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const { data, isError, isLoading, error } = useAllUsersQuery(user?._id!);
 
@@ -74,9 +75,9 @@ const Customers = ({ user }: PropsType) => {
       setRows(
         data.users.map((i) => ({
           avatar: (
-            <img 
-              style={{borderRadius: "50%"}}
-              src={`${server}/${i.photo}`} 
+            <img
+              style={{ borderRadius: "50%" }}
+              src={`${server}/${i.photo}`}
               alt={i.name}
             />
           ),

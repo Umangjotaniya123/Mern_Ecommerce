@@ -3,16 +3,16 @@ import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDeleteProductMutation, useProductDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
-import { server } from "../../../redux/store";
-import { User } from "../../../types/types";
+import { RootState, server } from "../../../redux/store";
 import { Skeleton } from "../../../components/Loader";
 import { responseToast } from "../../../utils/features";
+import { useSelector } from "react-redux";
 
-interface PropsType {
-  user: User | null;
-}
+const Productmanagement = () => {
 
-const Productmanagement = ({ user }: PropsType) => {
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const params = useParams();
   const navigate = useNavigate();

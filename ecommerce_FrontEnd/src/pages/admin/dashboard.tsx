@@ -7,18 +7,18 @@ import { BarChart, DoughnutChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
 import { Skeleton } from "../../components/Loader";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
-import { User } from "../../types/types";
 import { Navigate } from "react-router-dom";
-import { server } from "../../redux/store";
+import { RootState, server } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 const userImg =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp";
 
-interface PropsType {
-  user: User | null;
-}
+const Dashboard = () => {
 
-const Dashboard = ({ user }: PropsType) => {
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const { isLoading, data, isError } = useStatsQuery(user?._id!);
 

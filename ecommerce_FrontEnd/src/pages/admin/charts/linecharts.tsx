@@ -6,15 +6,16 @@ import { CustomError } from "../../../types/api-types";
 import { User } from "../../../types/types";
 import { getLastMonths } from "../../../utils/features";
 import { Skeleton } from "../../../components/Loader";
-
-interface PropsType {
-  user: User | null;
-};
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const { last12Months } = getLastMonths();
 
-const Linecharts = ({ user }: PropsType) => {
+const Linecharts = () => {
 
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
   const { isLoading, data, error, isError } = useLineQuery(user?._id!);
 
   const charts = data?.charts!;

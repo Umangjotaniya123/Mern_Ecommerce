@@ -1,15 +1,12 @@
 import { FaTrash } from "react-icons/fa";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { server } from "../../../redux/store";
-import { Order, OrderItem, User } from "../../../types/types";
+import { RootState, server } from "../../../redux/store";
+import { Order, OrderItem } from "../../../types/types";
 import { useDeleteOrderMutation, useOrderDetailsQuery, useUpdateOrderMutation } from "../../../redux/api/orderAPI";
 import { Skeleton } from "../../../components/Loader";
 import { responseToast } from "../../../utils/features";
-
-interface PropsType {
-  user: User | null;
-};
+import { useSelector } from "react-redux";
 
 const defaultData: Order = {
   shippingInfo: {
@@ -17,7 +14,7 @@ const defaultData: Order = {
     city: "",
     state: "",
     country: "",
-    pinCode: "",
+    pincode: undefined
   },
   status: "",
   subtotal: 0,
@@ -33,7 +30,11 @@ const defaultData: Order = {
   _id: "",
 }
 
-const TransactionManagement = ({ user }: PropsType) => {
+const TransactionManagement = () => {
+
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const params = useParams();
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const TransactionManagement = ({ user }: PropsType) => {
   const [deleteOrder] = useDeleteOrderMutation();
 
   const {
-    shippingInfo: { address, city, state, country, pinCode },
+    shippingInfo: { address, city, state, country, pincode },
     orderItems,
     user: { name },
     status,

@@ -1,25 +1,37 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { useLatestProductsQuery } from "../redux/api/productAPI";
 import toast from "react-hot-toast";
 import { Skeleton } from "../components/Loader";
-import { CartItem } from "../types/types";
-import { useDispatch } from "react-redux";
+import { CartItem, User } from "../types/types";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/reducer/cartReducer";
+import { useNewCartItemMutation } from "../redux/api/cartItems";
+import { responseToast } from "../utils/features";
+import { RootState } from "../redux/store";
 
 const Home = () => {
 
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const { data, isLoading, isError } = useLatestProductsQuery("");
+  const [newCartItem] = useNewCartItemMutation();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const addToCartHandler = (cartItem: CartItem) => {
+  const addToCartHandler = async(cartItem: CartItem) => {
     if (cartItem.stock < 1) return toast.error("Out of Stock");
 
-    dispatch(addToCart(cartItem));
+    const res = await newCartItem(cartItem);
 
-    toast.success("Added to Cart"); 
+    // console.log(res);
+    // if('data' in res)
+    //   dispatch(addToCart(cartItem));
+    responseToast(res, navigate, '');
+    // toast.success("Added to Cart"); 
   };
 
   if (isError) toast.error("Cannot Fetch the Products");
@@ -37,6 +49,7 @@ const Home = () => {
             <ProductCard
               key={i._id}
               productId={i._id}
+              userId={user?._id || ''}
               name={i.name}
               price={i.price}
               stock={i.stock}

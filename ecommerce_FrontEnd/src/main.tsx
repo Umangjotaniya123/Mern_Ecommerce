@@ -6,9 +6,11 @@ import { store } from './redux/store.ts'
 import { UserProvider } from './contexts/AuthContexts.ts';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <UserProvider>
+    <React.StrictMode>
       <Provider store={store}>
         <App />
       </Provider>
-  </React.StrictMode>,
+    </React.StrictMode>,
+  // </UserProvider>
 )

@@ -5,9 +5,9 @@ import { CartItem } from "../types/types";
 
 type CartItemProps = {
   cartItem: CartItem;
-  incrementHandler: (cartItem: CartItem) => void;
-  decrementHandler: (cartItem: CartItem) => void;
-  removeHandler: (id: string) => void;
+  incrementHandler: (_id:string, cartItem: CartItem) => void;
+  decrementHandler: (_id:string, cartItem: CartItem) => void;
+  removeHandler: (id: string, productId: string) => void;
 }
 
 const CartItems = ({ cartItem, incrementHandler, decrementHandler, removeHandler }: CartItemProps) => {
@@ -22,11 +22,11 @@ const CartItems = ({ cartItem, incrementHandler, decrementHandler, removeHandler
         <span>₹{price}</span>
       </article>
       <div>
-        <button onClick={() => decrementHandler(cartItem)} >-</button>
+        <button disabled={quantity == 1} onClick={() => decrementHandler(cartItem?._id || '', cartItem)} >-</button>
         <p>{quantity}</p>
-        <button onClick={() => incrementHandler(cartItem)} >+</button>
+        <button onClick={() => incrementHandler(cartItem?._id || '', cartItem)} >+</button>
       </div>
-      <button onClick={() => removeHandler(productId)}><FaTrash /></button>
+      <button onClick={() => removeHandler(cartItem?._id || '', productId)}><FaTrash /></button>
     </div>
   )
 }

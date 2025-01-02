@@ -14,7 +14,7 @@ const initialValue = {
   addType: '',
 };
 
-const FormCard = ({ fieldsArray }: any) => {
+const AddressList = ({ fieldsArray }: any) => {
 
   const { register, formState: { errors } } = useFormContext<User>();
   const { fields, append, remove } = fieldsArray;
@@ -141,4 +141,4 @@ const FormCard = ({ fieldsArray }: any) => {
   )
 };
 
-export default FormCard;
+export default AddressList;

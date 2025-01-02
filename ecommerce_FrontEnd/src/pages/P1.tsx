@@ -7,10 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
 import FormCard from "../components/F1Card";
-
-interface PropsType {
-  user: User | null;
-}
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const initialValue: Address = {
   address: '',
@@ -21,7 +19,11 @@ const initialValue: Address = {
   addType: '',
 }
 
-const Profile = ({ user }: PropsType) => {
+const Profile = () => {
+
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const navigate = useNavigate();
   const [view, setView] = useState(true);

@@ -5,12 +5,14 @@ import { User } from "../../../types/types";
 import { usePieQuery } from "../../../redux/api/dashboardAPI";
 import { Skeleton } from "../../../components/Loader";
 import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
-interface PropsType {
-  user: User | null;
-};
+const PieCharts = () => {
 
-const PieCharts = ({ user }: PropsType) => {
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
 
   const { isLoading, data, isError } = usePieQuery(user?._id!);
 

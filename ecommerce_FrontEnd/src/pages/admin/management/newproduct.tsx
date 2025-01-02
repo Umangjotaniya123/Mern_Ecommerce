@@ -1,17 +1,16 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { User } from "../../../types/types";
 import { useNewProductMutation } from "../../../redux/api/productAPI";
 import { responseToast } from "../../../utils/features";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
+const NewProduct = () => {
 
-interface PropsType {
-  user: User | null;
-}
-
-const NewProduct = ({ user }: PropsType) => {
-
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  )
   const navigate = useNavigate();
 
   const [name, setName] = useState<string>("");

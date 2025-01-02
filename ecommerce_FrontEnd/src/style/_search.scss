@@ -45,8 +45,22 @@
     .search-product-list {
       @include flex(row, flex-start, flex-start);
       flex-wrap: wrap;
-      height: calc(100% - 10rem);
+      // height: calc(100% - 10rem);
       overflow-y: auto;
+
+      .product-card{
+        margin: 15px;
+        width: 30%;
+        height: 20rem;
+        border: 2px solid rgb(170, 170, 175);
+        // @include baseShadow;
+        border-radius: 30px;
+
+        >img {
+          width: 80%;
+          height: 90%;
+        }
+      }
     }
     // $p: 0.5rem 1rem, $bg, $color
     article {
